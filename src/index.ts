@@ -10,6 +10,10 @@ export interface RssFeedConfig {
     formats: Format[]
     limit?: number
     content?: boolean
+    follow_challenge?: {
+        feedId: string
+        userId: string
+    }
 }
 
 export interface Post {
@@ -54,7 +58,7 @@ export function customRssPlugin(hexo: Hexo) {
                 summary: post.excerpt,
                 pubDate: post.date.toUTCString(),
                 updated: post.date.toISOString(),
-                category: post.tags.map((tag) => tag.name),
+                category: [...post.categories, ...post.tags].map((tag) => tag.name),
                 image: post.image,
                 author: post.author || hexo.config.author,
             }))
@@ -62,36 +66,70 @@ export function customRssPlugin(hexo: Hexo) {
             return feedConfig.formats.map((format) => {
                 let data: string
                 let path = feedConfig.path
+                const follow_challenge = feedConfig.follow_challenge || {}
                 switch (format) {
                     case 'rss2':
+                        path += '.xml'
                         data = json2xml({
                             rss: {
                                 channel: {
-                                    guid: hexo.config.guid,
+                                    follow_challenge,
                                     title: hexo.config.title,
                                     link: hexo.config.url,
                                     description: hexo.config.description,
+                                    image: {
+                                        url: hexo.config.icon,
+                                        title: hexo.config.title,
+                                        link: hexo.config.url,
+                                    },
+                                    'atom:link': {
+                                        href: hexo.config.url + path,
+                                        rel: 'self',
+                                        type: 'application/rss+xml',
+                                    },
+                                    generator: {
+                                        uri: 'https://hexo.io',
+                                        version: hexo.version,
+                                        _: 'hexo-custom-rss',
+                                    },
                                     item: commonData.map((item) => ({
+                                        guid: item.guid,
                                         title: item.title,
                                         link: item.link,
                                         description: item.description,
                                         pubDate: item.pubDate,
                                         category: item.category,
-                                        image: item.image,
+                                        author: item.author,
+                                        enclosure: item.image && {
+                                            url: item.image,
+                                            type: 'image',
+                                        },
                                     })),
                                 },
                             },
                         })
-                        path += '.xml'
+
                         break
                     case 'atom':
+                        path += '.atom'
                         data = json2xml({
                             feed: {
-                                id: hexo.config.guid,
+                                follow_challenge,
+                                id: hexo.config.url,
                                 title: hexo.config.title,
                                 link: hexo.config.url,
                                 subtitle: hexo.config.description,
+                                author: {
+                                    name: hexo.config.author,
+                                    email: hexo.config.email,
+                                },
+                                generator: {
+                                    uri: 'https://hexo.io',
+                                    version: hexo.version,
+                                    _: 'hexo-custom-rss',
+                                },
                                 entry: commonData.map((item) => ({
+                                    id: item.guid,
                                     title: item.title,
                                     link: item.link,
                                     content: item.description,
@@ -99,17 +137,26 @@ export function customRssPlugin(hexo: Hexo) {
                                     updated: item.updated,
                                     category: item.category,
                                     image: item.image,
+                                    author: item.author,
                                 })),
                             },
                         })
-                        path += '.atom'
+
                         break
                     case 'json':
+                        path += '.json'
                         data = JSON.stringify({
                             version: 'https://jsonfeed.org/version/1',
+                            follow_challenge,
                             title: hexo.config.title,
                             home_page_url: hexo.config.url,
+                            feed_url: hexo.config.url + path,
+                            icon: hexo.config.icon,
                             description: hexo.config.description,
+                            author: {
+                                name: hexo.config.author,
+                                email: hexo.config.email,
+                            },
                             items: commonData.map((item) => ({
                                 id: hexo.config.guid,
                                 title: item.title,
@@ -119,9 +166,10 @@ export function customRssPlugin(hexo: Hexo) {
                                 date_published: item.updated,
                                 tags: item.category,
                                 image: item.image,
+                                author: item.author,
                             })),
                         }, null, 2)
-                        path += '.json'
+
                         break
                 }
                 return {
