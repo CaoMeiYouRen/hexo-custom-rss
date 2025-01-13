@@ -56,7 +56,7 @@ export function customRssPlugin(hexo: Hexo) {
                 const hasTag = feedConfig?.tags?.some((tag) => postTags.includes(tag))
                 const hasCategory = feedConfig?.categories?.some((category) => postCategories.includes(category))
                 return hasTag || hasCategory
-            }).slice(0, feedConfig.limit) as Post[]
+            }).sort('-date').limit(feedConfig.limit) as Post[]
 
             const commonData = posts.map((post: Post) => ({
                 guid: post.permalink,
@@ -98,8 +98,8 @@ export function customRssPlugin(hexo: Hexo) {
                                     $: {
                                         href: hexo.config.url + path,
                                         rel: 'self',
+                                        type: 'application/rss+xml',
                                     },
-                                    type: 'application/rss+xml',
                                 },
                                 generator: {
                                     $: {
