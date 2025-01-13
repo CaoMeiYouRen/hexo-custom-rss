@@ -3,7 +3,7 @@ import Hexo from 'hexo'
 import mime from 'mime-types'
 import { json2xml } from './utils/xml'
 
-export type Format = 'rss2' | 'atom' | 'json'
+export type Format = 'rss' | 'rss2' | 'atom' | 'json'
 
 export interface RssFeedConfig {
     title?: string
@@ -80,10 +80,12 @@ export function customRssPlugin(hexo: Hexo) {
                 const follow_challenge = feedConfig.follow_challenge
                 const title = feedConfig.title || hexo.config.title
                 const description = feedConfig.description || hexo.config.description
-                const feedUrl = new URL(feedPath, hexo.config.url).toString()
+
                 switch (format) {
-                    case 'rss2':
+                    case 'rss':
+                    case 'rss2': {
                         feedPath += '.xml'
+                        const feedUrl = new URL(feedPath, hexo.config.url).toString()
                         data = json2xml({
                             $: {
                                 version: '2.0',
@@ -132,8 +134,10 @@ export function customRssPlugin(hexo: Hexo) {
                         }, { rootName: 'rss' })
 
                         break
-                    case 'atom':
+                    }
+                    case 'atom': {
                         feedPath += '.atom'
+                        const feedUrl = new URL(feedPath, hexo.config.url).toString()
                         data = json2xml({
                             $: {
                                 xmlns: 'http://www.w3.org/2005/Atom',
@@ -171,8 +175,10 @@ export function customRssPlugin(hexo: Hexo) {
                         }, { rootName: 'feed' })
 
                         break
-                    case 'json':
+                    }
+                    case 'json': {
                         feedPath += '.json'
+                        const feedUrl = new URL(feedPath, hexo.config.url).toString()
                         data = JSON.stringify({
                             version: 'https://jsonfeed.org/version/1',
                             follow_challenge,
@@ -200,6 +206,7 @@ export function customRssPlugin(hexo: Hexo) {
                         }, null, 2)
 
                         break
+                    }
                 }
                 return {
                     path: feedPath,
