@@ -39,6 +39,7 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@types/debug": "^4.1.12",
+    "@types/mime-types": "^2.1.4",
     "@types/node": "^22.10.5",
     "@types/xml2js": "^0.4.14",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
@@ -91,6 +92,7 @@
   },
   "dependencies": {
     "dayjs": "^1.11.13",
+    "mime-types": "^2.1.35",
     "tslib": "^2.8.1",
     "xml2js": "^0.6.2"
   },

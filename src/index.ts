@@ -1,4 +1,6 @@
+import path from 'path'
 import Hexo from 'hexo'
+import mime from 'mime-types'
 import { json2xml } from './utils/xml'
 
 export type Format = 'rss2' | 'atom' | 'json'
@@ -73,13 +75,14 @@ export function customRssPlugin(hexo: Hexo) {
 
             return feedConfig.formats.map((format) => {
                 let data: string
-                let path = feedConfig.path
+                let feedPath = feedConfig.path
                 const follow_challenge = feedConfig.follow_challenge
                 const title = feedConfig.title || hexo.config.title
                 const description = feedConfig.description || hexo.config.description
+                const feedUrl = new URL(feedPath, hexo.config.url).toString()
                 switch (format) {
                     case 'rss2':
-                        path += '.xml'
+                        feedPath += '.xml'
                         data = json2xml({
                             $: {
                                 version: '2.0',
@@ -87,8 +90,9 @@ export function customRssPlugin(hexo: Hexo) {
                             channel: {
                                 follow_challenge,
                                 title,
-                                link: hexo.config.url,
+                                link: feedUrl,
                                 description,
+                                language: hexo.config.language,
                                 image: {
                                     url: hexo.config.icon,
                                     title,
@@ -96,7 +100,7 @@ export function customRssPlugin(hexo: Hexo) {
                                 },
                                 'atom:link': {
                                     $: {
-                                        href: hexo.config.url + path,
+                                        href: feedUrl,
                                         rel: 'self',
                                         type: 'application/rss+xml',
                                     },
@@ -117,8 +121,10 @@ export function customRssPlugin(hexo: Hexo) {
                                     category: item.category,
                                     author: item.author,
                                     enclosure: item.image && {
-                                        url: item.image,
-                                        type: 'image',
+                                        $: {
+                                            url: item.image,
+                                            type: mime.lookup(path.extname(item.image)) || '',
+                                        },
                                     },
                                 })),
                             },
@@ -126,7 +132,7 @@ export function customRssPlugin(hexo: Hexo) {
 
                         break
                     case 'atom':
-                        path += '.atom'
+                        feedPath += '.atom'
                         data = json2xml({
                             $: {
                                 xmlns: 'http://www.w3.org/2005/Atom',
@@ -134,8 +140,10 @@ export function customRssPlugin(hexo: Hexo) {
                             follow_challenge,
                             id: hexo.config.url,
                             title,
-                            link: hexo.config.url,
+                            link: feedUrl,
                             subtitle: description,
+                            language: hexo.config.language,
+                            icon: hexo.config.icon,
                             author: {
                                 name: hexo.config.author,
                                 email: hexo.config.email,
@@ -162,15 +170,16 @@ export function customRssPlugin(hexo: Hexo) {
 
                         break
                     case 'json':
-                        path += '.json'
+                        feedPath += '.json'
                         data = JSON.stringify({
                             version: 'https://jsonfeed.org/version/1',
                             follow_challenge,
                             title,
                             home_page_url: hexo.config.url,
-                            feed_url: hexo.config.url + path,
+                            feed_url: feedUrl,
                             icon: hexo.config.icon,
                             description,
+                            language: hexo.config.language,
                             author: {
                                 name: hexo.config.author,
                                 email: hexo.config.email,
@@ -191,7 +200,7 @@ export function customRssPlugin(hexo: Hexo) {
                         break
                 }
                 return {
-                    path,
+                    path: feedPath,
                     data,
                 }
             })
