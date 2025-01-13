@@ -12,6 +12,18 @@ export interface RssFeedConfig {
     content?: boolean
 }
 
+export interface Post {
+    title: string
+    permalink: string
+    excerpt: string
+    content: string
+    date?: Date
+    tags?: any[]
+    categories?: any[]
+    image?: string
+    author?: string
+}
+
 export interface CustomRssConfig {
     feeds: RssFeedConfig[]
 }
@@ -21,76 +33,94 @@ export function customRssPlugin(hexo: Hexo) {
     if (!config.feeds?.length) {
         return
     }
+
     hexo.extend.generator.register('custom-rss', (locals, callback) => {
         const results = config.feeds.flatMap((feedConfig) => {
             if (!feedConfig.formats?.length) {
                 feedConfig.formats = ['rss2'] // 默认格式
             }
-            const posts = locals.posts.filter((post: { tags: any[], categories: any[] }) => {
+
+            const posts = locals.posts.filter((post: Post) => {
                 const hasTag = feedConfig.tags ? feedConfig.tags.some((tag) => post.tags.map((t: { name: any }) => t.name).includes(tag)) : true
                 const hasCategory = feedConfig.categories ? feedConfig.categories.some((category) => post.categories.map((c: { name: any }) => c.name).includes(category)) : true
                 return hasTag && hasCategory
-            }).slice(0, feedConfig.limit || locals.posts.length)
+            }).slice(0, feedConfig.limit || locals.posts.length) as Post[]
 
-            const rssData = {
-                rss: {
-                    channel: {
-                        title: hexo.config.title,
-                        link: hexo.config.url,
-                        description: hexo.config.description,
-                        item: posts.map((post: { title: any, path: any, excerpt: any, content: any, date: Date }) => ({
-                            title: post.title,
-                            link: `${hexo.config.url}/${post.path}`,
-                            description: feedConfig.content !== false ? post.content : post.excerpt,
-                            pubDate: post.date.toUTCString(),
-                        })),
-                    },
-                },
-            }
-
-            const atomData = {
-                feed: {
-                    title: hexo.config.title,
-                    link: hexo.config.url,
-                    subtitle: hexo.config.description,
-                    entry: posts.map((post: { title: any, path: any, excerpt: any, content: any, date: Date }) => ({
-                        title: post.title,
-                        link: `${hexo.config.url}/${post.path}`,
-                        summary: post.excerpt,
-                        updated: post.date.toISOString(),
-                        content: feedConfig.content !== false ? post.content : undefined,
-                    })),
-                },
-            }
-
-            const jsonData = {
-                version: 'https://jsonfeed.org/version/1',
-                title: hexo.config.title,
-                home_page_url: hexo.config.url,
-                description: hexo.config.description,
-                items: posts.map((post: { title: any, path: any, excerpt: any, content: any, date: Date }) => ({
-                    title: post.title,
-                    url: `${hexo.config.url}/${post.path}`,
-                    content_text: post.excerpt,
-                    content_html: feedConfig.content !== false ? post.content : undefined,
-                    date_published: post.date.toISOString(),
-                })),
-            }
+            const commonData = posts.map((post: Post) => ({
+                guid: post.permalink,
+                title: post.title,
+                link: post.permalink,
+                description: feedConfig.content !== false ? post.content : post.excerpt,
+                summary: post.excerpt,
+                pubDate: post.date.toUTCString(),
+                updated: post.date.toISOString(),
+                category: post.tags.map((tag) => tag.name),
+                image: post.image,
+                author: post.author || hexo.config.author,
+            }))
 
             return feedConfig.formats.map((format) => {
                 let data: string
                 let path = feedConfig.path
                 switch (format) {
                     case 'rss2':
-                        data = json2xml(rssData, { rootName: 'rss', headless: true, xmldec: { version: '1.0', encoding: 'UTF-8' } })
+                        data = json2xml({
+                            rss: {
+                                channel: {
+                                    guid: hexo.config.guid,
+                                    title: hexo.config.title,
+                                    link: hexo.config.url,
+                                    description: hexo.config.description,
+                                    item: commonData.map((item) => ({
+                                        title: item.title,
+                                        link: item.link,
+                                        description: item.description,
+                                        pubDate: item.pubDate,
+                                        category: item.category,
+                                        image: item.image,
+                                    })),
+                                },
+                            },
+                        })
                         path += '.xml'
                         break
                     case 'atom':
-                        data = json2xml(atomData, { rootName: 'feed', headless: true, xmldec: { version: '1.0', encoding: 'UTF-8' } })
+                        data = json2xml({
+                            feed: {
+                                id: hexo.config.guid,
+                                title: hexo.config.title,
+                                link: hexo.config.url,
+                                subtitle: hexo.config.description,
+                                entry: commonData.map((item) => ({
+                                    title: item.title,
+                                    link: item.link,
+                                    content: item.description,
+                                    summary: item.summary,
+                                    updated: item.updated,
+                                    category: item.category,
+                                    image: item.image,
+                                })),
+                            },
+                        })
                         path += '.atom'
                         break
                     case 'json':
-                        data = JSON.stringify(jsonData, null, 2)
+                        data = JSON.stringify({
+                            version: 'https://jsonfeed.org/version/1',
+                            title: hexo.config.title,
+                            home_page_url: hexo.config.url,
+                            description: hexo.config.description,
+                            items: commonData.map((item) => ({
+                                id: hexo.config.guid,
+                                title: item.title,
+                                url: item.link,
+                                content_text: item.description,
+                                summary: item.summary,
+                                date_published: item.updated,
+                                tags: item.category,
+                                image: item.image,
+                            })),
+                        }, null, 2)
                         path += '.json'
                         break
                 }
