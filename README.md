@@ -24,6 +24,8 @@
 
 
 > 通过 tag、category 过滤生成的 rss，可自定义路径
+>
+> Filter the generated RSS through tags and categories, and customize the path
 
 ## 🏠 主页
 
@@ -43,9 +45,42 @@ npm install hexo-custom-rss
 
 ## 👨‍💻 使用
 
-```sh
-npm run start
+**配置**
+在 Hexo 配置文件 _config.yml 中添加或修改以下配置：
+
+```yaml
+customRss:
+  enable: true
+  feeds:
+    - title: 我的博客 # 标题，默认为博客标题，可在此处修改默认值
+      description: 这是我的博客 # 描述，默认为博客描述，可在此处修改默认值
+      tags: # 要包含的标签
+        - 技术
+        - 生活
+      categories: # 要包含的分类
+        - 编程
+      path: rss # rss 文件的路径，必填
+      formats: # 要生成的格式。默认值为 ["rss2"]。假设 path 为 rss，则生成的文件为 public/rss.xml、public/rss.atom 和 public/rss.json
+        - rss2
+        - atom
+        - json
+      limit: 10 # 要生成的文章数量，默认为 10
+      content: true # 是否包含文章内容，默认为 true
+      follow_challenge: # 认证 Follow 订阅源，可选，参考 https://follow.is/ 文档
+        feedId: your_feed_id
+        userId: your_user_id
 ```
+
+配置完成后，运行 Hexo 生成器：
+```sh
+hexo generate
+```
+生成的 RSS 文件将位于 public/rss.xml、public/rss.atom 和 public/rss.json。
+
+**支持的格式**
+- RSS 2.0
+- Atom
+- JSON Feed
 
 ## 🛠️ 开发
 
