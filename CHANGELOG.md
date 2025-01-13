@@ -1,5 +1,12 @@
 # hexo-custom-rss
 
+## [1.0.1](https://github.com/CaoMeiYouRen/hexo-custom-rss/compare/v1.0.0...v1.0.1) (2025-01-13)
+
+
+### 🐛 Bug 修复
+
+* 更新自定义 RSS 插件，添加按日期排序功能并修复 RSS 类型声明 ([cf9547b](https://github.com/CaoMeiYouRen/hexo-custom-rss/commit/cf9547b))
+
 # 1.0.0 (2025-01-13)
 
 
