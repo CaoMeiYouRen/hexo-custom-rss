@@ -29,26 +29,31 @@ export interface Post {
 }
 
 export interface CustomRssConfig {
+    enable: boolean
     feeds: RssFeedConfig[]
 }
 
 export function customRssPlugin(hexo: Hexo) {
     const config = hexo.config.customRss as CustomRssConfig
-    if (!config.feeds?.length) {
+    if (config?.enable === false || !config?.feeds?.length) {
         return
     }
 
-    hexo.extend.generator.register('custom-rss', (locals, callback) => {
+    hexo.extend.generator.register('rss', (locals, callback) => {
+        console.log('customRssPlugin start')
         const results = config.feeds.flatMap((feedConfig) => {
             if (!feedConfig.formats?.length) {
                 feedConfig.formats = ['rss2'] // 默认格式
             }
+            if (!feedConfig.limit) {
+                feedConfig.limit = 10
+            }
 
             const posts = locals.posts.filter((post: Post) => {
-                const hasTag = feedConfig.tags ? feedConfig.tags.some((tag) => post.tags.map((t: { name: any }) => t.name).includes(tag)) : true
-                const hasCategory = feedConfig.categories ? feedConfig.categories.some((category) => post.categories.map((c: { name: any }) => c.name).includes(category)) : true
-                return hasTag && hasCategory
-            }).slice(0, feedConfig.limit || locals.posts.length) as Post[]
+                const hasTag = feedConfig?.tags?.some((tag) => post.tags.map((t: { name: any }) => t.name).includes(tag))
+                const hasCategory = feedConfig?.categories?.some((category) => post.categories.map((c: { name: any }) => c.name).includes(category))
+                return hasTag || hasCategory
+            }).slice(0, feedConfig.limit) as Post[]
 
             const commonData = posts.map((post: Post) => ({
                 guid: post.permalink,
@@ -178,7 +183,7 @@ export function customRssPlugin(hexo: Hexo) {
                 }
             })
         })
-
+        console.log('customRssPlugin end')
         callback(null, results)
     })
 }
