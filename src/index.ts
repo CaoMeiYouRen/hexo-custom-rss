@@ -26,6 +26,7 @@ export interface Post {
     excerpt: string
     content: string
     date?: Date
+    updated?: Date
     tags?: any[]
     categories?: any[]
     image?: string
@@ -67,7 +68,7 @@ export function customRssPlugin(hexo: Hexo) {
                 description: feedConfig.content !== false ? post.content : post.excerpt,
                 summary: post.excerpt,
                 pubDate: new Date(post.date).toUTCString(),
-                updated: new Date(post.date).toISOString(),
+                updated: new Date(post.updated).toUTCString(),
                 category: [...post.categories.map((category: { name: string }) => category.name), ...post.tags.map((tag: { name: string }) => tag.name)],
                 image: post.image,
                 author: post.author || hexo.config.author,
@@ -161,6 +162,7 @@ export function customRssPlugin(hexo: Hexo) {
                                 link: item.link,
                                 content: item.description,
                                 summary: item.summary,
+                                published: item.pubDate,
                                 updated: item.updated,
                                 category: item.category,
                                 image: item.image,
@@ -190,7 +192,7 @@ export function customRssPlugin(hexo: Hexo) {
                                 url: item.link,
                                 content_html: item.description,
                                 summary: item.summary,
-                                date_published: item.updated,
+                                date_published: new Date(item.pubDate).toISOString(),
                                 tags: item.category,
                                 image: item.image,
                                 author: item.author,
