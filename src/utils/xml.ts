@@ -1,6 +1,6 @@
 import xml2js from 'xml2js'
-export function json2xml(obj: any) {
-    const builder = new xml2js.Builder({ rootName: 'xml' })
+export function json2xml(obj: any, options?: xml2js.BuilderOptions) {
+    const builder = new xml2js.Builder({ rootName: 'xml', ...options })
     return builder.buildObject(obj)
 }
 
