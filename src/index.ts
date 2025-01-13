@@ -1,16 +1,15 @@
-import { __PROD__, __DEV__ } from '@/env'
-/**
- * say hello
- *
- * @author CaoMeiYouRen
- * @date 2020-11-28
- * @export
- */
-export function hello() {
-    if (__PROD__) {
-        console.log('Hello production')
-    }
-    if (__DEV__) {
-        console.log('Hello development')
-    }
+import Hexo from 'hexo'
+import { json2xml } from './utils/xml'
+export interface CustomRssConfig {
+
 }
+
+export function customRssPlugin(hexo: Hexo) {
+    const config = hexo.config.customRss as CustomRssConfig
+
+    hexo.extend.generator.register('custom-rss', (locals, callback) => {
+
+    })
+}
+
+customRssPlugin(hexo)
