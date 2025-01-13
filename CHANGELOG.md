@@ -1,5 +1,13 @@
 # hexo-custom-rss
 
+## [1.0.2](https://github.com/CaoMeiYouRen/hexo-custom-rss/compare/v1.0.1...v1.0.2) (2025-01-13)
+
+
+### 🐛 Bug 修复
+
+* 添加 mime-types 支持，优化 RSS 生成中的文件路径和类型声明 ([9a13ff8](https://github.com/CaoMeiYouRen/hexo-custom-rss/commit/9a13ff8))
+* 添加更新日期支持到 RSS 生成，修复发布时间字段 ([99a6538](https://github.com/CaoMeiYouRen/hexo-custom-rss/commit/99a6538))
+
 ## [1.0.1](https://github.com/CaoMeiYouRen/hexo-custom-rss/compare/v1.0.0...v1.0.1) (2025-01-13)
 
 
