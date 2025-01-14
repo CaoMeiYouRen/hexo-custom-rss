@@ -1,5 +1,12 @@
 # hexo-custom-rss
 
+## [1.0.3](https://github.com/CaoMeiYouRen/hexo-custom-rss/compare/v1.0.2...v1.0.3) (2025-01-13)
+
+
+### 🐛 Bug 修复
+
+* 支持 RSS 格式，更新自定义 RSS 插件以处理不同输出格式 ([f5f1c67](https://github.com/CaoMeiYouRen/hexo-custom-rss/commit/f5f1c67))
+
 ## [1.0.2](https://github.com/CaoMeiYouRen/hexo-custom-rss/compare/v1.0.1...v1.0.2) (2025-01-13)
 
 
