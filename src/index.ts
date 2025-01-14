@@ -181,7 +181,10 @@ export function customRssPlugin(hexo: Hexo) {
                         const feedUrl = new URL(feedPath, hexo.config.url).toString()
                         data = JSON.stringify({
                             version: 'https://jsonfeed.org/version/1',
-                            follow_challenge,
+                            follow_challenge: {
+                                feed_id: feedConfig.follow_challenge?.feedId,
+                                user_id: feedConfig.follow_challenge?.userId,
+                            },
                             title,
                             home_page_url: hexo.config.url,
                             feed_url: feedUrl,
