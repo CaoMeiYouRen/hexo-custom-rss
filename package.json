@@ -1,6 +1,6 @@
 {
   "name": "hexo-custom-rss",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "通过 tag、category 过滤生成的 rss，可自定义路径",
   "author": "CaoMeiYouRen",
   "private": false,

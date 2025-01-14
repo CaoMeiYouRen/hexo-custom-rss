@@ -1,5 +1,12 @@
 # hexo-custom-rss
 
+## [1.0.4](https://github.com/CaoMeiYouRen/hexo-custom-rss/compare/v1.0.3...v1.0.4) (2025-01-14)
+
+
+### 🐛 Bug 修复
+
+* 更新自定义 RSS 插件以包含 follow_challenge 的 feed_id 和 user_id ([3c4e0e1](https://github.com/CaoMeiYouRen/hexo-custom-rss/commit/3c4e0e1))
+
 ## [1.0.3](https://github.com/CaoMeiYouRen/hexo-custom-rss/compare/v1.0.2...v1.0.3) (2025-01-13)
 
 
