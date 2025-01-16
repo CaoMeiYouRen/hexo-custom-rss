@@ -39,7 +39,7 @@ export interface CustomRssConfig {
     feeds: RssFeedConfig[]
 }
 
-export function customRss(config: CustomRssConfig, locals: any, callback: NodeJSLikeCallback<any>) {
+export function customRss(hexo: Hexo, config: CustomRssConfig, locals: any, callback: NodeJSLikeCallback<any>) {
     const results = config.feeds.flatMap((feedConfig) => {
         if (!feedConfig.formats?.length) {
             feedConfig.formats = ['rss2'] // 默认格式
@@ -221,7 +221,7 @@ export function customRssPlugin(hexo: Hexo) {
         return
     }
     hexo.extend.generator.register('rss', (locals, callback) => {
-        customRss(config, locals, callback)
+        customRss(hexo, config, locals, callback)
     })
 }
 
