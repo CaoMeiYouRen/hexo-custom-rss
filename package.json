@@ -63,7 +63,8 @@
     "tsup": "^8.3.5",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3",
-    "vitest": "^2.1.8"
+    "vitest": "^2.1.8",
+    "warehouse": "^5.0.1"
   },
   "config": {
     "commitizen": {

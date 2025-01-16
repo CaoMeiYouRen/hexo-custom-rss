@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, Mock } from 'vitest'
 import type Hexo from 'hexo'
-import { customRssPlugin } from '../src/index'
+import { customRssPlugin, customRss } from '../src/index'
 
 describe('customRssPlugin', () => {
     const mockHexo = {
@@ -43,21 +43,6 @@ describe('customRssPlugin', () => {
         },
     } as unknown as Hexo
 
-    const mockPosts = [
-        {
-            title: 'Test Post 1',
-            permalink: 'https://example.com/test-post-1',
-            excerpt: 'Test post 1 excerpt',
-            content: 'Test post 1 content',
-            date: new Date(),
-            updated: new Date(),
-            tags: [{ name: 'test' }],
-            categories: [{ name: 'test' }],
-            image: 'https://example.com/test-post-1.jpg',
-            author: 'Test Author',
-        },
-    ]
-
     it('should register generator when enabled', () => {
         customRssPlugin(mockHexo)
         expect(mockHexo.extend.generator.register).toHaveBeenCalledWith('rss', expect.any(Function))
@@ -78,3 +63,8 @@ describe('customRssPlugin', () => {
     })
 
 })
+
+describe('customRss', () => {
+
+})
+

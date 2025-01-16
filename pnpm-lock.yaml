@@ -111,6 +111,9 @@ importers:
       vitest:
         specifier: ^2.1.8
         version: 2.1.8(@types/node@22.10.5)
+      warehouse:
+        specifier: ^5.0.1
+        version: 5.0.1
 
 packages:
 
