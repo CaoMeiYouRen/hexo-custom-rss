@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, Mock } from 'vitest'
 import type Hexo from 'hexo'
+import Database from 'warehouse'
 import { customRssPlugin, customRss } from '../src/index'
 
 describe('customRssPlugin', () => {
@@ -65,6 +66,28 @@ describe('customRssPlugin', () => {
 })
 
 describe('customRss', () => {
-
+    const db = new Database()
+    const Tag = db.model('tags', {
+        name: String,
+        permalink: String,
+        posts: Array,
+    })
+    const Category = db.model('categories', {
+        name: String,
+        permalink: String,
+        posts: Array,
+    })
+    const Post = db.model('posts', {
+        title: String,
+        permalink: String,
+        excerpt: String,
+        content: String,
+        date: Date,
+        updated: Date,
+        tags: { type: Database.Schema.Types.Array, ref: 'tags' },
+        categories: { type: Database.Schema.Types.Array, ref: 'categories' },
+        image: String,
+        author: String,
+    })
 })
 
