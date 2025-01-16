@@ -221,4 +221,6 @@ export function customRssPlugin(hexo: Hexo) {
     })
 }
 
-customRssPlugin(hexo)
+if (typeof hexo !== 'undefined') {
+    customRssPlugin(hexo)
+}
