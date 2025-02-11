@@ -63,7 +63,7 @@
     "tsup": "^8.3.5",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3",
-    "vitest": "^2.1.8",
+    "vitest": "^2.1.9",
     "warehouse": "^5.0.1"
   },
   "config": {
@@ -101,7 +101,9 @@
   },
   "pnpm": {
     "overrides": {
-      "compare-func": "^2.0.0"
+      "compare-func": "^2.0.0",
+      "katex": "^0.16.21",
+      "vite": "^5.4.12"
     }
   },
   "publishConfig": {
