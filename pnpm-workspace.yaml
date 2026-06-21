@@ -1,6 +1,6 @@
 allowBuilds:
-  esbuild: set this to true or false
-  hexo-util: set this to true or false
+  esbuild: true
+  hexo-util: true
 
 onlyBuiltDependencies:
   - esbuild
