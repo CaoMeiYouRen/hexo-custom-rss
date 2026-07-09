@@ -23,6 +23,7 @@
   },
   "scripts": {
     "lint": "cross-env NODE_ENV=production eslint src --fix",
+    "typecheck": "tsc --noEmit",
     "release": "semantic-release",
     "prebuild": "rimraf dist",
     "build": "cross-env NODE_ENV=production tsup",
