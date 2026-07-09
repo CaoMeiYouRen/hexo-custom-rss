@@ -8,10 +8,3 @@ updates:
       time: 04:00
       timezone: Asia/Shanghai
     ignore:
-      - dependency-name: semantic-release
-      - dependency-name: "@commitlint/config-conventional"
-        versions:
-          - ">= 19.0.0"
-      - dependency-name: "@commitlint/cli"
-        versions:
-          - ">= 19.0.0"
