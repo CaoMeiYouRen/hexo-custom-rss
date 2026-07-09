@@ -1,5 +1,13 @@
 # hexo-custom-rss
 
+## [1.0.6](https://github.com/CaoMeiYouRen/hexo-custom-rss/compare/v1.0.5...v1.0.6) (2026-07-09)
+
+
+### 🐛 Bug 修复
+
+* **deps:** upgrade vitest to 3.2.6, add overrides for critical/high transitive deps ([87f71f8](https://github.com/CaoMeiYouRen/hexo-custom-rss/commit/87f71f8))
+* **rss:** 修复 RSS 生成中的潜在空值问题 ([9e59cc7](https://github.com/CaoMeiYouRen/hexo-custom-rss/commit/9e59cc7))
+
 ## [1.0.5](https://github.com/CaoMeiYouRen/hexo-custom-rss/compare/v1.0.4...v1.0.5) (2025-01-16)
 
 
