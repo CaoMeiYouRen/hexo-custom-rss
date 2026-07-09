@@ -62,9 +62,12 @@ export function customRss(hexo: Hexo, config: CustomRssConfig, locals: any, call
             link: post.permalink,
             description: feedConfig.content !== false ? post.content : post.excerpt,
             summary: post.excerpt,
-            pubDate: new Date(post.date).toUTCString(),
-            updated: new Date(post.updated).toUTCString(),
-            category: [...post.categories.map((category: { name: string }) => category.name), ...post.tags.map((tag: { name: string }) => tag.name)],
+            pubDate: post.date ? new Date(post.date).toUTCString() : undefined,
+            updated: post.updated ? new Date(post.updated).toUTCString() : undefined,
+            category: [
+                ...(post.categories?.map((category: { name: string }) => category.name) || []),
+                ...(post.tags?.map((tag: { name: string }) => tag.name) || []),
+            ],
             image: post.image,
             author: post.author || hexo.config.author,
         }))
@@ -196,7 +199,7 @@ export function customRss(hexo: Hexo, config: CustomRssConfig, locals: any, call
                             url: item.link,
                             content_html: item.description,
                             summary: item.summary,
-                            date_published: new Date(item.pubDate).toISOString(),
+                            date_published: item.pubDate ? new Date(item.pubDate).toISOString() : undefined,
                             tags: item.category,
                             image: item.image,
                             author: item.author,
@@ -221,7 +224,9 @@ export function customRssPlugin(hexo: Hexo) {
         return
     }
     hexo.extend.generator.register('rss', (locals, callback) => {
-        customRss(hexo, config, locals, callback)
+        if (callback) {
+            customRss(hexo, config, locals, callback)
+        }
     })
 }
 
