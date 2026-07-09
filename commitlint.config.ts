@@ -1,6 +1,9 @@
+import config from 'commitlint-config-cmyr'
+
 export default {
-    extends: ['cmyr'],
+    ...config,
     rules: {
+        ...config.rules,
         'type-enum': [
             2,
             'always',
